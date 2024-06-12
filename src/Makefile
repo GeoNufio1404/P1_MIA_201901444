@@ -1,6 +1,6 @@
 # Definir los archivos objeto y los archivos de inclusión
 OBJECTS := main.o
-INCLUDES := ../include/*.cpp
+INCLUDES := ../lib/*.cpp
 
 # Regla para compilar el ejecutable
 ejecutable : $(OBJECTS)

@@ -3,7 +3,6 @@
 ## Project Description
 
 This project aims to ...
-https://github.com/DiiAns23/MIA_VACACIONES_2022/blob/master/Proyecto_1/lib/structs.h
 
 ## Features
 
