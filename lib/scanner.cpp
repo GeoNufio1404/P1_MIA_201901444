@@ -1,5 +1,5 @@
 #include "../include/scanner.h"
-//#include "../include/disk.cpp"
+#include "../lib/disk.cpp"
 
 #include <iostream>
 #include <stdlib.h>
@@ -11,11 +11,11 @@
 
 using namespace std;
 
-//Disk Disco;
+Disk Disco;
 bool logued = false; // Variable para saber si el usuario esta logueado
 
 // ======================== CONSTRUCTOR ========================
-scanner::scanner()
+Scanner::Scanner()
 {
 }
 
@@ -26,7 +26,7 @@ void Clear()
 }
 
 // ========================= UPPER =========================
-string scanner::Upper(string str)
+string Scanner::Upper(string str)
 {
     string str_upper = str;
     for (int i = 0; i < str_upper.length(); i++)
@@ -37,7 +37,7 @@ string scanner::Upper(string str)
 }
 
 // ========================= TOKEN =========================
-string scanner::Token(string tk)
+string Scanner::Token(string tk)
 {
     string tkn = "";
     bool Terminar = false;
@@ -69,7 +69,7 @@ string scanner::Token(string tk)
 }
 
 // ========================= SPLIT =========================
-vector<string> scanner::Split(string texto, string text_split)
+vector<string> Scanner::Split(string texto, string text_split)
 {
     vector<string> Cadena;
     if (texto.empty())
@@ -90,7 +90,7 @@ vector<string> scanner::Split(string texto, string text_split)
 }
 
 // ========================= SPLIT TOKENS =========================
-vector<string> scanner::SplitTokens(string text)
+vector<string> Scanner::SplitTokens(string text)
 {
     vector<string> tokens;
     if (text.empty())
@@ -160,7 +160,7 @@ vector<string> scanner::SplitTokens(string text)
 }
 
 // ========================= COMPARE =========================
-bool scanner::Compare(string tk, string token)
+bool Scanner::Compare(string tk, string token)
 {
     if (Upper(tk) == Upper(token))
     {
@@ -170,19 +170,19 @@ bool scanner::Compare(string tk, string token)
 }
 
 // ========================= ERRORES =========================
-void scanner::Errores(string operacion, string mensaje)
+void Scanner::Errores(string operacion, string mensaje)
 {
     cout << "Error: " << operacion << " - " << mensaje << endl;
 }
 
 // ========================= RESPUESTA =========================
-void scanner::Respuesta(string operacion, string mensaje)
+void Scanner::Respuesta(string operacion, string mensaje)
 {
     cout << "Respuesta: " << operacion << " - " << mensaje << endl;
 }
 
 // ========================= CONFIRMAR =========================
-bool scanner::Confirmar(string mensaje)
+bool Scanner::Confirmar(string mensaje)
 {
     string respuesta;
     cout << mensaje << " (S/N): ";
@@ -195,7 +195,7 @@ bool scanner::Confirmar(string mensaje)
 }
 
 // ========================= START =========================
-void scanner::Start()
+void Scanner::Start()
 {
     system("clear"); // Limpiar consola
 
@@ -223,7 +223,7 @@ void scanner::Start()
 }
 
 // ========================= FUNCION EXEC =========================
-void scanner::FuncionExec(vector<string> tks)
+void Scanner::FuncionExec(vector<string> tks)
 {
     string path = "";
     for (string token : tks)
@@ -244,7 +244,7 @@ void scanner::FuncionExec(vector<string> tks)
 }
 
 // ========================= EXEC =========================
-void scanner::Excec(string path)
+void Scanner::Excec(string path)
 {
     string filename(path);
     vector<string> lines;
@@ -282,11 +282,19 @@ void scanner::Excec(string path)
 }
 
 // ========================= FUNCTIONS =========================
-void scanner::Functions(string token, vector<string> tks)
+void Scanner::Functions(string token, vector<string> tks)
 {
     if (Compare(token, "MKDISK"))
     {
-        cout << "MKDISK" << endl;
-        //Disco.mkdisk(tks);
+        Disco.mkdisk(tks);
+    } else if (Compare(token, "RMDISK")){
+        
+    }
+
+    // Imprimir los tokens
+    cout << token << endl;
+    for (string tk : tks)
+    {
+        cout << "Token: " << tk << endl;
     }
 }

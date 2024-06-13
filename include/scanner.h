@@ -6,15 +6,12 @@
 
 using namespace std;
 
-class scanner
+class Scanner
 {
 public:
-    scanner(){
-
-    }; // Constructor
+    Scanner(); // Constructor
 
     void Start();                                          // Funcion para iniciar el scanner
-    void Clear();                                          // Funcion para limpiar la consola
     void Functions(string token, vector<string> tks);      // Funcion para ejecutar las funciones
     void Errores(string operacion, string mensaje);        // Funcion para mostrar errores
     void Respuesta(string operacion, string mensaje);      // Funcion para mostrar respuestas

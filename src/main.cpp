@@ -1,10 +1,10 @@
 #include <iostream>
-#include "../include/scanner.h"
+#include "../lib/scanner.cpp"
 
 
 using namespace std;
 
 int main() {
-    scanner Scan;
+    Scanner Scan;
     Scan.Start();
 }
