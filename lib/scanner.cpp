@@ -290,11 +290,4 @@ void Scanner::Functions(string token, vector<string> tks)
     } else if (Compare(token, "RMDISK")){
         
     }
-
-    // Imprimir los tokens
-    cout << token << endl;
-    for (string tk : tks)
-    {
-        cout << "Token: " << tk << endl;
-    }
 }

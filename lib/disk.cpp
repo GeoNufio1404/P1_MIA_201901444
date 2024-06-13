@@ -31,6 +31,7 @@ void Disk::mkdisk(vector<string> tks)
     {
         string tk = token.substr(0, token.find("="));
         token.erase(0, tk.length() + 1);
+
         if (Scan.Compare(tk, "path"))
         {
             // Path
@@ -63,9 +64,9 @@ void Disk::mkdisk(vector<string> tks)
             if (Unit.empty())
             {
 
-                if (!Scan.Compare(tk,"k") && !Scan.Compare(tk,"m"))
+                if (!Scan.Compare(token, "k") && !Scan.Compare(token, "m"))
                 {
-                    Scan.Errores("MKDISK", "Unidad no reconocida: " + Unit);
+                    Scan.Errores("MKDISK", "Unidad no reconocida");
                     Error = true;
                 }
                 Unit = token;
@@ -75,15 +76,21 @@ void Disk::mkdisk(vector<string> tks)
                 Scan.Errores("MKDISK", "Parametro repetido: " + tk);
                 Error = true;
             }
-        } else if (Scan.Compare(tk, "f")) {
+        }
+        else if (Scan.Compare(tk, "f"))
+        {
             // fit
-            if (Fit.empty()){
-                if (!Scan.Compare(tk,"bf") && !Scan.Compare(tk,"ff") && !Scan.Compare(tk,"wf")){
+            if (Fit.empty())
+            {
+                if (!Scan.Compare(token, "bf") && !Scan.Compare(token, "ff") && !Scan.Compare(token, "wf"))
+                {
                     Scan.Errores("MKDISK", "Ajuste no reconocido: " + Fit);
                     Error = true;
                 }
                 Fit = token;
-            } else {
+            }
+            else
+            {
                 Scan.Errores("MKDISK", "Parametro repetido: " + tk);
                 Error = true;
             }
@@ -95,9 +102,16 @@ void Disk::mkdisk(vector<string> tks)
         }
     }
 
+    if (Error)
+    {
+        Scan.Errores("MKDISK", "Existen errores en los parametros");
+        return;
+    }
+
+    // Verificar parametros obligatorios
     if (Path != "" && Size != 0)
     {
-        makeDisk(Path, Size, Unit, Fit);
+        CreateDisk(Path, Size, Unit, Fit);
     }
     else
     {
@@ -106,14 +120,19 @@ void Disk::mkdisk(vector<string> tks)
 }
 
 // ===================== MAKE DISK =====================
-void Disk::makeDisk(string path, int size, string unit, string fit)
+void Disk::CreateDisk(string path, int size, string unit, string fit)
 {
-    cout << "Path: " << path << " Size: " << size << " Unit: " << unit << endl;
+    // Datos default
     if (unit.empty())
     {
-        unit = "k";
+        unit = "m";
+    }
+    if (fit.empty())
+    {
+        fit = "ff";
     }
 
+    // Unit
     if (unit == "k")
     {
         size = size * 1024;
@@ -122,13 +141,8 @@ void Disk::makeDisk(string path, int size, string unit, string fit)
     {
         size = size * 1024 * 1024;
     }
-    else
-    {
-        Scan.Errores("MKDISK", "Unidad no reconocida: " + unit);
-        return;
-    }
 
-    cout << "Size: " << size << endl;
+    cout << "Path: " << path << " Size: " << size << " Unit: " << unit << " Fit: " << fit << endl;
     FILE *archivo;
     archivo = fopen(path.c_str(), "wb");
     if (archivo == NULL)

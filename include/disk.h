@@ -22,7 +22,7 @@ public:
     } Transition;
 
     void mkdisk(vector<string> tks);
-    void makeDisk(string path, int size, string unit, string fit);
+    void CreateDisk(string path, int size, string unit, string fit);
 };
 
 #endif
