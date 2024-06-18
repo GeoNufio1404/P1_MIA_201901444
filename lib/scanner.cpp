@@ -102,59 +102,68 @@ vector<string> Scanner::SplitTokens(string text)
     int estado = 0;
     for (char &c : text)
     {
-        if (estado == 0 && c == '-')
+        if (c == '\n')
         {
-            estado = 1;
+            cout << "Salto de linea" << endl;
         }
-        else if (estado == 0 && c == '#')
+
+        switch (estado)
         {
-            continue;
-        }
-        else if (estado != 0)
-        {
-            if (estado == 1)
+        case 0:
+            if (c == '-')
             {
-                if (c == '=')
-                {
-                    estado = 2;
-                }
-                else if (c == ' ')
-                {
-                    continue;
-                }
-            }
-            else if (estado == 2)
-            {
-                if (c == '\"')
-                {
-                    estado = 3;
-                }
-                else
-                {
-                    estado = 4;
-                }
-            }
-            else if (estado == 3)
-            {
-                if (c == '\"')
-                {
-                    estado = 4;
-                }
-            }
-            else if (estado == 4 && c == '\"')
-            {
-                tokens.clear();
+                estado = 1;
                 continue;
             }
-            else if (estado == 4 && c == ' ')
+            else if (c == '#')
+            {
+            }
+            break;
+        case 1:
+            if (c == '=')
+            {
+                estado = 2;
+            }
+            else if (c == ' ')
+            {
+                continue;
+            }
+            break;
+        case 2:
+            if (c == '\"')
+            {
+                estado = 3;
+            }
+            else
+            {
+                estado = 4;
+            }
+            break;
+        case 3:
+            if (c == '\"')
+            {
+                estado = 4;
+            }
+            break;
+        case 4:
+            if (c == ' ')
             {
                 estado = 0;
                 tokens.push_back(token);
                 token = "";
                 continue;
             }
-            token += c;
+            else if (c == '\"')
+            {
+                tokens.clear();
+                continue;
+            }
+            break;
+        default:
+            break;
         }
+
+        token += c;
     }
     return tokens;
 }
@@ -198,11 +207,11 @@ bool Scanner::Confirmar(string mensaje)
 void Scanner::Start()
 {
     system("clear"); // Limpiar consola
+    Clear();
 
     // Loop para leer los comandos
     while (true)
     {
-        Clear();
         std::cout << ">>";
 
         string texto;
@@ -216,9 +225,6 @@ void Scanner::Start()
         texto.erase(0, tk.length() + 1);
         vector<string> tks = SplitTokens(texto); // Separar los tokens
         Functions(tk, tks);                      // Buscar las funciones
-
-        cout << "\nPresione enter para continuar..." << endl;
-        getline(cin, texto);
     }
 }
 
@@ -250,28 +256,24 @@ void Scanner::Excec(string path)
     vector<string> lines;
     string line;
     ifstream input_file(filename);
+
     if (!input_file.is_open())
     {
         cerr << "No se puede abrir el archivo" << filename << endl;
         return;
     }
+
     while (getline(input_file, line))
     {
-        lines.push_back(line);
+        lines.push_back(line); // Leer las lineas del archivo
     }
+
     for (const auto &i : lines)
     {
         string texto = i;
         string tk = Token(texto);
         if (texto != "")
         {
-            if (Compare(texto, "PAUSE"))
-            {
-                string pause;
-                Respuesta("PAUSE", "Presione enter para continuar...");
-                getline(cin, pause);
-                continue;
-            }
             texto.erase(0, tk.length() + 1);
             vector<string> tks = SplitTokens(texto);
             Functions(tk, tks);
@@ -284,10 +286,30 @@ void Scanner::Excec(string path)
 // ========================= FUNCTIONS =========================
 void Scanner::Functions(string token, vector<string> tks)
 {
-    if (Compare(token, "MKDISK"))
+    if (Compare(token, "mkdisk"))
     {
         Disco.mkdisk(tks);
-    } else if (Compare(token, "RMDISK")){
-        
+    }
+    else if (Compare(token, "rmdisk"))
+    {
+        Disco.rmdisk(tks);
+    }
+    else if (Compare(token, "fdisk"))
+    {
+        Disco.fdisk(tks);
+    }
+    else if (Compare(token, "pause"))
+    {
+        Respuesta("PAUSE", "Presione enter para continuar...");
+        string pause;
+        getline(cin, pause);
+    }
+    else if (Compare(token, "exec"))
+    {
+        FuncionExec(tks);
+    }
+    else
+    {
+        Errores("FUNCTIONS", "Comando no reconocido");
     }
 }

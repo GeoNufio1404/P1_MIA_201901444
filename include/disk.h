@@ -23,6 +23,12 @@ public:
 
     void mkdisk(vector<string> tks);
     void CreateDisk(string path, int size, string unit, string fit);
+
+    void rmdisk(vector<string> tks);
+    void RemoveDisk(string path);
+
+    void fdisk(vector<string> tks);
+    void CreatePartition(int size, string unit, string path, string type, string fit, bool del, string name, bool add);
 };
 
 #endif
