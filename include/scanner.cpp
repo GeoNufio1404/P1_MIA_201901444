@@ -1,5 +1,6 @@
-#include "../include/scanner.h"
-#include "../lib/disk.cpp"
+#include "../lib/scanner.h"
+
+#include "../lib/disk.h"
 
 #include <iostream>
 #include <stdlib.h>

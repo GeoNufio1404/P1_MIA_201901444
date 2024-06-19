@@ -1,5 +1,8 @@
-#include "../include/disk.h"
-#include "../include/scanner.h"
+#include "../lib/disk.h"
+
+#include "../lib/scanner.h"
+#include "../lib/shared.h"
+#include "../lib/structs.h"
 
 #include <iostream>
 #include <string>
@@ -11,6 +14,7 @@
 using namespace std;
 
 Scanner Scan;
+Shared Compartido;
 int ValorInicial;
 
 // ===================== CONSTRUCTOR =====================
@@ -130,7 +134,6 @@ void Disk::mkdisk(vector<string> tks)
     }
 }
 
-// ===================== MAKE DISK =====================
 void Disk::CreateDisk(string path, int size, string unit, string fit)
 {
     // Datos default
@@ -230,17 +233,26 @@ void Disk::rmdisk(vector<string> tks)
     }
 }
 
-// ====================== REMOVE DISK ======================
 void Disk::RemoveDisk(string path)
 {
     // Eliminar disco
-    if (remove(path.c_str()) != 0)
+    cout << "¿Desea eliminar el disco ubicado en:" << path << " ? (S/N): ";
+    string Confirmacion;
+    cin >> Confirmacion;
+    if (Compartido.Comparar(Confirmacion, "S"))
     {
-        Scan.Errores("RMDISK", "Error al eliminar el disco");
+        if (remove(path.c_str()) != 0)
+        {
+            Scan.Errores("RMDISK", "Error al eliminar el disco");
+        }
+        else
+        {
+            Scan.Respuesta("RMDISK", "Disco eliminado correctamente");
+        }
     }
     else
     {
-        Scan.Respuesta("RMDISK", "Disco eliminado correctamente");
+        Scan.Respuesta("RMDISK", "Operacion cancelada");
     }
 }
 
@@ -252,9 +264,9 @@ void Disk::fdisk(vector<string> tks)
     string Path = "";
     string Type = "";
     string Fit = "";
-    bool Del = false;
+    string Del = "";
     string Name = "";
-    bool Add = false;
+    int Add = 0;
     bool Error = false;
 
     for (string token : tks)
@@ -268,6 +280,12 @@ void Disk::fdisk(vector<string> tks)
             if (Size == 0)
             {
                 Size = atoi(token.c_str());
+                if (Size <= 0)
+                {
+                    Scan.Errores("FDISK", "El tamaño de la partición debe ser mayor a 0");
+                    Error = true;
+                    return;
+                }
             }
             else
             {
@@ -315,7 +333,7 @@ void Disk::fdisk(vector<string> tks)
                 return;
             }
         }
-        else if (Scan.Compare(tk, "type"))
+        else if (Scan.Compare(tk, "t"))
         {
             // Type
             if (Type.empty())
@@ -335,7 +353,7 @@ void Disk::fdisk(vector<string> tks)
                 return;
             }
         }
-        else if (Scan.Compare(tk, "fit"))
+        else if (Scan.Compare(tk, "f"))
         {
             // Fit
             if (Fit.empty())
@@ -358,9 +376,15 @@ void Disk::fdisk(vector<string> tks)
         else if (Scan.Compare(tk, "delete"))
         {
             // Delete
-            if (!Del)
+            if (Del.empty())
             {
-                Del = true;
+                if (!Scan.Compare(token, "full") && !Scan.Compare(token, "fast"))
+                {
+                    Scan.Errores("FDISK", "Tipo de borrado no reconocido");
+                    Error = true;
+                    return;
+                }
+                Del = token;
             }
             else
             {
@@ -386,9 +410,9 @@ void Disk::fdisk(vector<string> tks)
         else if (Scan.Compare(tk, "add"))
         {
             // Add
-            if (!Add)
+            if (Add == 0)
             {
-                Add = true;
+                Add = atoi(token.c_str());
             }
             else
             {
@@ -414,16 +438,45 @@ void Disk::fdisk(vector<string> tks)
     // Obligatorios size, path, name
     if (Size != 0 && !Path.empty() && !Name.empty())
     {
-        CreatePartition(Size, Unit, Path, Type, Fit, Del, Name, Add);
+        if (Add != 0 && !Del.empty())
+        {
+            Scan.Errores("FDISK", "No se pueden usar los parametros add y delete al mismo tiempo");
+            return;
+        }
+
+        if (Add != 0)
+        {
+            // Agregar a particion existente
+            AddPartition(Path, Name, Add, Unit);
+        }
+        else if (!Del.empty())
+        {
+            // Eliminar particion
+            DeletePartition(Path, Name, Del);
+        }
+        else
+        {
+            // Crear particion
+            CreatePartition(Size, Unit, Path, Type, Fit, Name);
+        }
     }
     else
     {
-        Scan.Errores("FDISK", "Faltan parametros obligatorios: s, path, name");
+        Scan.Errores("FDISK", "Faltan parametros obligatorios: (s, path, name)");
     }
 }
 
-// ====================== CREATE PARTITION ======================
-void Disk::CreatePartition(int size, string unit, string path, string type, string fit, bool del, string name, bool add)
+vector<Structs::Particion> Disk::GetPartitions(Structs::MBR mbr)
+{
+    vector<Structs::Particion> particiones;
+    particiones.push_back(mbr.mbr_Particion1);
+    particiones.push_back(mbr.mbr_Particion2);
+    particiones.push_back(mbr.mbr_Particion3);
+    particiones.push_back(mbr.mbr_Particion4);
+    return particiones;
+}
+
+void Disk::CreatePartition(int size, string unit, string path, string type, string fit, string name)
 {
     // Datos default
     if (unit.empty())
@@ -434,10 +487,40 @@ void Disk::CreatePartition(int size, string unit, string path, string type, stri
     {
         fit = "wf";
     }
-    if (type.empty())
+    if (type.empty()) // p + e <= 4 | solo 1 extendida | si no hay e, no hay l
     {
         type = "p";
     }
+    ValorInicial = 0;
 
+    if (Compartido.Comparar(unit, "k"))
+    {
+        size = size * 1024;
+    }
+    else if (Compartido.Comparar(unit, "m"))
+    {
+        size = size * 1024 * 1024;
+    }
 
+    Structs::MBR mbr;
+    FILE *archivo;
+    archivo = fopen(path.c_str(), "rb+");
+    if (archivo == NULL)
+    {
+        Scan.Errores("FDISK", "Error - No se pudo localizar el disco");
+        return;
+    }
+    rewind(archivo);
+    fread(&mbr, sizeof(mbr), 1, archivo);
+    fclose(archivo);
+
+    vector<Structs::Particion> particiones = GetPartitions(mbr);
+}
+
+void Disk::DeletePartition(string path, string name, string del)
+{
+}
+
+void Disk::AddPartition(string path, string name, int add, string unit)
+{
 }

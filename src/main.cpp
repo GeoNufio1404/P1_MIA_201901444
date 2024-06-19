@@ -1,10 +1,14 @@
 #include <iostream>
-#include "../lib/scanner.cpp"
 
+// Includes
+#include "../include/scanner.cpp"
+#include "../include/shared.cpp"
+#include "../include/disk.cpp"
 
 using namespace std;
 
-int main() {
+int main()
+{
     Scanner Scan;
     Scan.Start();
 }
