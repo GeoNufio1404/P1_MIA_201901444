@@ -2,7 +2,7 @@
 
 // Includes
 #include "../include/scanner.cpp"
-#include "../include/shared.cpp"
+#include "../include/mount.cpp"
 #include "../include/disk.cpp"
 
 using namespace std;

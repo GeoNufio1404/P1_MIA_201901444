@@ -34,6 +34,7 @@ public:
     void DeletePartition(string path, string name, string del);
     void AddPartition(string path, string name, int add, string unit);
     vector<Structs::Particion> GetPartitions(Structs::MBR mbr);
+    vector<Structs::EBR> GetLogics(Structs::Particion particion, string path);
 };
 
 #endif

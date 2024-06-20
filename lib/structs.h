@@ -11,24 +11,24 @@ public:
 
     typedef struct _Particion // Estructura de una partición
     {
-        char part_status = '0'; // Estado de la partición
-        char part_type;         // Tipo de partición
-        char part_fit;          // Ajuste de la partición
-        int part_start = -1;    // Byte de inicio de la partición
-        int part_size = 0;      // Tamaño de la partición
-        char part_name[16];     // Nombre de la partición
+        char Part_status = '0'; // Estado de la partición
+        char Part_type;         // Tipo de partición
+        char Part_fit;          // Ajuste de la partición
+        int Part_start = -1;    // Byte de inicio de la partición
+        int Part_size = 0;      // Tamaño de la partición
+        char Part_name[16];     // Nombre de la partición
     } Particion;
 
     typedef struct _MBR // Estructura de un MBR
     {
-        int mbr_tamano = 0;         // Tamaño del disco
-        time_t mbr_fecha_creacion;  // Fecha de creación del disco
-        int mbr_disk_signature = 0; // Número de identificación del disco
-        char disk_fit;              // Ajuste del disco
-        Particion mbr_Particion1;   // Partición 1
-        Particion mbr_Particion2;   // Partición 2
-        Particion mbr_Particion3;   // Partición 3
-        Particion mbr_Particion4;   // Partición 4
+        int Mbr_tamano = 0;         // Tamaño del disco
+        time_t Mbr_fecha_creacion;  // Fecha de creación del disco
+        int Mbr_disk_signature = 0; // Número de identificación del disco
+        char Disk_fit;              // Ajuste del disco
+        Particion Mbr_Particion1;   // Partición 1
+        Particion Mbr_Particion2;   // Partición 2
+        Particion Mbr_Particion3;   // Partición 3
+        Particion Mbr_Particion4;   // Partición 4
     } MBR;
 
     typedef struct _EBR // Estructura de un EBR

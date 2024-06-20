@@ -1,7 +1,6 @@
 #include "../lib/disk.h"
 
 #include "../lib/scanner.h"
-#include "../lib/shared.h"
 #include "../lib/structs.h"
 
 #include <iostream>
@@ -14,7 +13,6 @@
 using namespace std;
 
 Scanner Scan;
-Shared Compartido;
 int ValorInicial;
 
 // ===================== CONSTRUCTOR =====================
@@ -239,7 +237,7 @@ void Disk::RemoveDisk(string path)
     cout << "¿Desea eliminar el disco ubicado en:" << path << " ? (S/N): ";
     string Confirmacion;
     cin >> Confirmacion;
-    if (Compartido.Comparar(Confirmacion, "S"))
+    if (Scan.Compare(Confirmacion, "S"))
     {
         if (remove(path.c_str()) != 0)
         {
@@ -344,7 +342,7 @@ void Disk::fdisk(vector<string> tks)
                     Error = true;
                     return;
                 }
-                Type = token;
+                Type = "p";
             }
             else
             {
@@ -469,11 +467,35 @@ void Disk::fdisk(vector<string> tks)
 vector<Structs::Particion> Disk::GetPartitions(Structs::MBR mbr)
 {
     vector<Structs::Particion> particiones;
-    particiones.push_back(mbr.mbr_Particion1);
-    particiones.push_back(mbr.mbr_Particion2);
-    particiones.push_back(mbr.mbr_Particion3);
-    particiones.push_back(mbr.mbr_Particion4);
+    particiones.push_back(mbr.Mbr_Particion1);
+    particiones.push_back(mbr.Mbr_Particion2);
+    particiones.push_back(mbr.Mbr_Particion3);
+    particiones.push_back(mbr.Mbr_Particion4);
     return particiones;
+}
+
+vector<Structs::EBR> Disk::GetLogics(Structs::Particion particion, string path)
+{
+    vector<Structs::EBR> logicas;
+    FILE *archivo;
+    archivo = fopen(path.c_str(), "rb+");
+    if (archivo == NULL)
+    {
+        Scan.Errores("FDISK", "Error - No se pudo localizar el disco");
+        return logicas;
+    }
+    rewind(archivo);
+    fseek(archivo, particion.Part_start, SEEK_SET);
+    Structs::EBR ebr;
+    fread(&ebr, sizeof(ebr), 1, archivo);
+    while (ebr.Part_next != -1)
+    {
+        logicas.push_back(ebr);
+        fseek(archivo, ebr.Part_next, SEEK_SET);
+        fread(&ebr, sizeof(ebr), 1, archivo);
+    }
+    fclose(archivo);
+    return logicas;
 }
 
 void Disk::CreatePartition(int size, string unit, string path, string type, string fit, string name)
@@ -493,11 +515,11 @@ void Disk::CreatePartition(int size, string unit, string path, string type, stri
     }
     ValorInicial = 0;
 
-    if (Compartido.Comparar(unit, "k"))
+    if (Scan.Compare(unit, "k"))
     {
         size = size * 1024;
     }
-    else if (Compartido.Comparar(unit, "m"))
+    else if (Scan.Compare(unit, "m"))
     {
         size = size * 1024 * 1024;
     }
@@ -515,6 +537,44 @@ void Disk::CreatePartition(int size, string unit, string path, string type, stri
     fclose(archivo);
 
     vector<Structs::Particion> particiones = GetPartitions(mbr);
+    vector<Transition> between;
+
+    int usado = 0;
+    int ext = 0;
+    int c = 1;
+    int base = sizeof(mbr);
+    Structs::Particion extendida;
+    for (Structs::Particion p : particiones)
+    {
+        if (p.Part_status == '1')
+        {
+            Transition trn;
+            trn.Particion = c;
+            trn.Start = p.Part_start;
+            trn.End = p.Part_start + p.Part_size;
+
+            trn.Before = trn.Start - base;
+            base = trn.End;
+
+            if (usado != 0){
+                between.at(usado - 1).After = trn.Start - between.at(usado - 1).End;
+            }
+            between.push_back(trn);
+            usado++;
+
+            // Convetir char a string
+            string tipo = string(1, p.Part_type);
+            if (Scan.Compare(tipo, "e"))
+            {
+                ext++;
+                extendida = p;
+            }
+        }
+        if (usado == 4 && !(Scan.Compare(type, "t")))
+        {
+            break;
+        }
+    }
 }
 
 void Disk::DeletePartition(string path, string name, string del)
