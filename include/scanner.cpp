@@ -21,9 +21,25 @@ Scanner::Scanner()
 }
 
 // ========================= CLEAR =========================
-void Clear()
+void Scanner::Clear()
 {
     cout << "\x1B[2J\x1B[H"; // Limpiar consola
+}
+
+// ========================= AVISO =========================
+void Scanner::Aviso(string mensaje)
+{
+    // Mostrar avisos de color amarillo
+    cout << endl;
+    cout << "\t\033[1;33m AVISO: " << mensaje << "\033[0m" << endl;
+    cout << endl;
+}
+
+// ========================= MENSAJE =========================
+void Scanner::Mensaje(string mensaje)
+{
+    // Mostrar mensajes de color verde
+    cout << "\t\033[1;32m" << mensaje << "\033[0m" << endl;
 }
 
 // ========================= UPPER =========================
@@ -67,27 +83,6 @@ string Scanner::Token(string tk)
         }
     }
     return tkn;
-}
-
-// ========================= SPLIT =========================
-vector<string> Scanner::Split(string texto, string text_split)
-{
-    vector<string> Cadena;
-    if (texto.empty())
-    {
-        return Cadena;
-    }
-
-    int n = texto.length();
-    char char_array[n + 1];
-    strcpy(char_array, texto.c_str());
-    char *point = strtok(char_array, text_split.c_str());
-    while (point != NULL)
-    {
-        Cadena.push_back(string(point));
-        point = strtok(NULL, text_split.c_str());
-    }
-    return Cadena;
 }
 
 // ========================= SPLIT TOKENS =========================
@@ -182,26 +177,10 @@ bool Scanner::Compare(string tk, string token)
 // ========================= ERRORES =========================
 void Scanner::Errores(string operacion, string mensaje)
 {
-    cout << "Error: " << operacion << " - " << mensaje << endl;
-}
-
-// ========================= RESPUESTA =========================
-void Scanner::Respuesta(string operacion, string mensaje)
-{
-    cout << "Respuesta: " << operacion << " - " << mensaje << endl;
-}
-
-// ========================= CONFIRMAR =========================
-bool Scanner::Confirmar(string mensaje)
-{
-    string respuesta;
-    cout << mensaje << " (S/N): ";
-    getline(cin, respuesta);
-    if (Compare(respuesta, "S"))
-    {
-        return true;
-    }
-    return false;
+    // Mostrar error de color rojo
+    cout << endl;
+    cout << "\t\033[1;31m ERROR: " << operacion << " - " << mensaje << "\033[0m" << endl;
+    cout << endl;
 }
 
 // ========================= START =========================
@@ -210,10 +189,15 @@ void Scanner::Start()
     system("clear"); // Limpiar consola
     Clear();
 
+    // Mostrar mensaje de bienvenida
+    Mensaje("Bienvenido a la consola de comandos de MIA");
+    Mensaje("Para salir de la consola escriba 'exit' y presione enter");
+    cout << endl;
+
     // Loop para leer los comandos
     while (true)
     {
-        std::cout << ">>";
+        cout << ">> ";
 
         string texto;
         getline(cin, texto);
@@ -260,7 +244,7 @@ void Scanner::Excec(string path)
 
     if (!input_file.is_open())
     {
-        cerr << "No se puede abrir el archivo" << filename << endl;
+        Errores("EXEC", "No se pudo abrir el archivo");
         return;
     }
 
@@ -301,7 +285,7 @@ void Scanner::Functions(string token, vector<string> tks)
     }
     else if (Compare(token, "pause"))
     {
-        Respuesta("PAUSE", "Presione enter para continuar...");
+        Aviso("PAUSE - Presione enter para continuar...");
         string pause;
         getline(cin, pause);
     }

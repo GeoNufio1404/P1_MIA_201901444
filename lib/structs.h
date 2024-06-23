@@ -12,8 +12,8 @@ public:
     typedef struct _Particion // Estructura de una partición
     {
         char Part_status = '0'; // Estado de la partición
-        char Part_type;         // Tipo de partición
-        char Part_fit;          // Ajuste de la partición
+        char Part_type = '0';   // Tipo de partición
+        char Part_fit = '0';    // Ajuste de la partición
         int Part_start = -1;    // Byte de inicio de la partición
         int Part_size = 0;      // Tamaño de la partición
         char Part_name[16];     // Nombre de la partición
