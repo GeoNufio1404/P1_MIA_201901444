@@ -1,6 +1,8 @@
 #ifndef SCANNER_H
 #define SCANNER_H
 
+#include "./structs.h"
+
 #include <vector>
 #include <string>
 
@@ -23,6 +25,12 @@ public:
     string Token(string tk);                          // Funcion para analizar el token
     string Upper(string str);                         // Funcion para convertir a mayusculas
     vector<string> SplitTokens(string texto);         // Funcion para separar los tokens
+
+    void rep(vector<string> tks);
+    string DotParticion(Structs::Particion particion);
+    string ReporteMBR(string path, Structs::MBR mbr);
+    void CrearDot(string Nombre, string dot);
+    void CrearImagen(string ruta);
 };
 
 #endif // SCANNER_H

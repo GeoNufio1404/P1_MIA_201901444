@@ -16,12 +16,12 @@ using namespace std;
 Scanner Scan;
 int ValorInicial;
 
-// ===================== CONSTRUCTOR =====================
 Disk::Disk()
 {
 }
 
 // ===================== MKDISK =====================
+
 void Disk::mkdisk(vector<string> tks)
 {
     string Path = "";
@@ -219,13 +219,12 @@ void Disk::CreateDisk(string path, int size, string unit, string fit)
             char mostrar_fecha[20];
             strftime(mostrar_fecha, 20, "%Y/%m/%d %H:%M:%S", tm);
             Scan.Aviso("MKDISK - Disco creado correctamente");
-            cout << endl;
             Scan.Mensaje("========== MBR ==========");
-            Scan.Mensaje("Size: " + to_string(discoI.Mbr_tamano) + " Bs");
+            Scan.Mensaje("Size: " + to_string(discoI.Mbr_tamano) + " Bits");
             Scan.Mensaje("Fecha: " + string(mostrar_fecha));
             Scan.Mensaje("Fit: " + string(1, discoI.Disk_fit));
             Scan.Mensaje("Disk_Signature: " + to_string(discoI.Mbr_disk_signature));
-            Scan.Mensaje("Bits del MBR: " + to_string(sizeof(Structs::MBR)));
+            Scan.Mensaje("Bits del MBR: " + to_string(sizeof(discoI)));
             Scan.Mensaje("Path: " + path);
             cout << endl;
         }
@@ -238,6 +237,7 @@ void Disk::CreateDisk(string path, int size, string unit, string fit)
 }
 
 // ====================== FDISK ======================
+
 void Disk::rmdisk(vector<string> tks)
 {
     string Path = "";
@@ -322,7 +322,76 @@ void Disk::RemoveDisk(string path)
     }
 }
 
+// ====================== AUXILIARES ======================
+
+vector<Structs::Particion> Disk::ObtenerParticiones(Structs::MBR mbr)
+{
+    vector<Structs::Particion> particiones;
+    particiones.push_back(mbr.Mbr_Particion1);
+    particiones.push_back(mbr.Mbr_Particion2);
+    particiones.push_back(mbr.Mbr_Particion3);
+    particiones.push_back(mbr.Mbr_Particion4);
+    return particiones;
+}
+
+Structs::MBR Disk::ObtenerMBR(string path)
+{
+    Structs::MBR mbr;
+    FILE *archivo;
+    archivo = fopen(path.c_str(), "r");
+    if (archivo == NULL)
+    {
+        Scan.Errores("FDISK", "Error - No se pudo localizar el disco");
+        return mbr;
+    }
+    rewind(archivo);                      // Regresar al inicio del archivo
+    fread(&mbr, sizeof(mbr), 1, archivo); // Leer el MBR del disco
+    fclose(archivo);                      // Cerrar el archivo
+    return mbr;
+}
+
+int Disk::ContarTipoParticion(vector<Structs::Particion> particiones, string tipo)
+{
+    // Convertir el tipo a char
+    char tipoChar = tipo.c_str()[0];
+
+    int contador = 0;
+    for (Structs::Particion particion : particiones)
+    {
+        if (particion.Part_type == tipoChar)
+        {
+            contador++;
+        }
+    }
+    return contador;
+}
+
+vector<Structs::EBR> Disk::ObtenerParticionesLogicas(Structs::Particion particion, string path)
+{
+    vector<Structs::EBR> logicas;
+    FILE *archivo;
+    archivo = fopen(path.c_str(), "rb+");
+    if (archivo == NULL)
+    {
+        Scan.Errores("FDISK", "Error - No se pudo localizar el disco");
+        return logicas;
+    }
+    rewind(archivo);
+    fseek(archivo, particion.Part_start, SEEK_SET);
+    Structs::EBR ebr;
+    fread(&ebr, sizeof(ebr), 1, archivo);
+    while (ebr.Part_next != -1)
+    {
+        logicas.push_back(ebr);
+        fseek(archivo, ebr.Part_next, SEEK_SET);
+        fread(&ebr, sizeof(ebr), 1, archivo);
+    }
+    fclose(archivo);
+    return logicas;
+}
+
 // ====================== FDISK ======================
+
 void Disk::fdisk(vector<string> tks)
 {
     int Size = 0;
@@ -532,85 +601,6 @@ void Disk::fdisk(vector<string> tks)
     }
 }
 
-vector<Structs::Particion> Disk::ObtenerParticiones(Structs::MBR mbr)
-{
-    vector<Structs::Particion> particiones;
-    particiones.push_back(mbr.Mbr_Particion1);
-    particiones.push_back(mbr.Mbr_Particion2);
-    particiones.push_back(mbr.Mbr_Particion3);
-    particiones.push_back(mbr.Mbr_Particion4);
-    return particiones;
-}
-
-Structs::MBR Disk::ObtenerMBR(string path)
-{
-    Structs::MBR mbr;
-    FILE *archivo;
-    archivo = fopen(path.c_str(), "r");
-    if (archivo == NULL)
-    {
-        Scan.Errores("FDISK", "Error - No se pudo localizar el disco");
-        return mbr;
-    }
-    rewind(archivo);                      // Regresar al inicio del archivo
-    fread(&mbr, sizeof(mbr), 1, archivo); // Leer el MBR del disco
-    fclose(archivo);                      // Cerrar el archivo
-    return mbr;
-}
-
-int Disk::ContarTipoParticion(vector<Structs::Particion> particiones, string tipo)
-{
-    // Convertir el tipo a char
-    char tipoChar = tipo.c_str()[0];
-
-    int contador = 0;
-    for (Structs::Particion particion : particiones)
-    {
-        if (particion.Part_type == tipoChar)
-        {
-            contador++;
-        }
-    }
-    return contador;
-}
-
-int Disk::ContarParticiones(vector<Structs::Particion> particiones)
-{
-    int contador = 0;
-    for (Structs::Particion particion : particiones)
-    {
-        if (particion.Part_status == '1')
-        {
-            contador++;
-        }
-    }
-    return contador;
-}
-
-vector<Structs::EBR> Disk::ObtenerParticionesLogicas(Structs::Particion particion, string path)
-{
-    vector<Structs::EBR> logicas;
-    FILE *archivo;
-    archivo = fopen(path.c_str(), "rb+");
-    if (archivo == NULL)
-    {
-        Scan.Errores("FDISK", "Error - No se pudo localizar el disco");
-        return logicas;
-    }
-    rewind(archivo);
-    fseek(archivo, particion.Part_start, SEEK_SET);
-    Structs::EBR ebr;
-    fread(&ebr, sizeof(ebr), 1, archivo);
-    while (ebr.Part_next != -1)
-    {
-        logicas.push_back(ebr);
-        fseek(archivo, ebr.Part_next, SEEK_SET);
-        fread(&ebr, sizeof(ebr), 1, archivo);
-    }
-    fclose(archivo);
-    return logicas;
-}
-
 void Disk::CreatePartition(int size, string unit, string path, string type, string fit, string name)
 {
 
@@ -638,37 +628,60 @@ void Disk::CreatePartition(int size, string unit, string path, string type, stri
         size = size * 1024 * 1024;
     }
 
+    // Obtener el MBR del disco
     Structs::MBR mbr;
     mbr = ObtenerMBR(path);
+    // Obtener las particiones del disco
+    vector<Structs::Particion> particiones = ObtenerParticiones(mbr);
 
     // Comprobar si hay espacio en el disco
-    if (mbr.Mbr_tamano - sizeof(mbr) < size)
+    int EspacioParticiones = 0;
+    int EspacioDisponible = 0;
+    int NumParticiones = ContarTipoParticion(particiones, "p") + ContarTipoParticion(particiones, "e");
+
+    if (NumParticiones == 4)
+    {
+        cout << endl;
+        Scan.Mensaje("========================================");
+        // Mostrar particiones
+        for (Structs::Particion particion : particiones)
+        {
+            Scan.Mensaje("Particion: " + string(particion.Part_name) + " Status: " + string(1, particion.Part_status) + " Type: " + string(1, particion.Part_type) + " Fit: " + string(1, particion.Part_fit) + " Start: " + to_string(particion.Part_start) + " Size: " + to_string(particion.Part_size) + " Bytes");
+            Scan.Mensaje("========================================");
+        }
+        Scan.Errores("FDISK", "Ya existen 4 particiones en el disco, no es posible crear mas particiones");
+        return;
+    }
+    else if (NumParticiones > 0)
+    {
+        for (Structs::Particion particion : particiones)
+        {
+            if (particion.Part_status == '1')
+            {
+                EspacioParticiones += particion.Part_size;
+            }
+        }
+    }
+
+    EspacioDisponible = mbr.Mbr_tamano - sizeof(mbr) - EspacioParticiones;
+
+    if (EspacioDisponible < size)
     {
         Scan.Aviso("FDISK - No hay suficiente espacio en el disco");
-        Scan.Mensaje("Disco - Espacio disponible: " + to_string(mbr.Mbr_tamano - sizeof(mbr)) + " Bytes");
+        Scan.Mensaje("Disco - Espacio disponible: " + to_string(EspacioDisponible) + " Bytes");
         Scan.Mensaje(name + " - Espacio requerido: " + to_string(size) + " Bytes");
         return;
     }
 
-    // Obtener las particiones del disco
-    vector<Structs::Particion> particiones = ObtenerParticiones(mbr);
-
-    if (ContarParticiones(particiones) == 4)
-    {
-        Scan.Errores("FDISK", "Ya existen 4 particiones en el disco, abortando operacion");
-        return;
-    }
+    ValorInicial = sizeof(mbr);
+    cout << "ValorInicial: " << ValorInicial << endl;
 
     if (type == "p")
     {
-        cout << "Primaria" << endl;
-
-        ValorInicial = sizeof(mbr);
 
         // Crear particion primaria
-        for (Structs::Particion particion : particiones)
+        for (Structs::Particion &particion : particiones)
         {
-
             if (particion.Part_status == '0')
             {
                 // Si la particion es la ultima, se crea
@@ -677,54 +690,112 @@ void Disk::CreatePartition(int size, string unit, string path, string type, stri
                 particion.Part_fit = fit.substr(0, 1).c_str()[0];
                 particion.Part_size = size;
                 strcpy(particion.Part_name, name.c_str());
-                particion.Part_start = ValorInicial;
+                particion.Part_start = ValorInicial + 1; // Se suma 1 para el byte de ajuste
                 break;
             }
             else
             {
-                // Si la particion no es la ultima, se suma el tamaño de la particion
-                ValorInicial = particion.Part_start + particion.Part_size;
+                // Si la particion no es la ultima, se suma el tamaño de la particion + el bit de ajuste
+                ValorInicial += particion.Part_size + 1;
             }
         }
-
-        // Actualizar el MBR
-        mbr.Mbr_Particion1 = particiones[0];
-        mbr.Mbr_Particion2 = particiones[1];
-        mbr.Mbr_Particion3 = particiones[2];
-        mbr.Mbr_Particion4 = particiones[3];
-
-        // Escribir el MBR en el disco
-        FILE *archivo;
-        archivo = fopen(path.c_str(), "rb+");
-        if (archivo == NULL)
-        {
-            Scan.Errores("FDISK", "Error - No se pudo localizar el disco al momento de actulizar el MBR");
-            return;
-        }
-        rewind(archivo);
-        fwrite(&mbr, sizeof(mbr), 1, archivo);
-        fclose(archivo);
     }
     else if (type == "e")
     {
-        cout << "Extendida" << endl;
         // Crear particion extendida
         if (ContarTipoParticion(particiones, "e") > 0)
         {
             Scan.Errores("FDISK", "Ya existe una particion extendida en el disco");
             return;
         }
+
+        for (Structs::Particion particion : particiones)
+        {
+            if (particion.Part_status == '0')
+            {
+                // Si la particion es la ultima, se crea
+                particion.Part_status = '1';
+                particion.Part_type = 'e';
+                particion.Part_fit = fit.substr(0, 1).c_str()[0];
+                particion.Part_size = size;
+                strcpy(particion.Part_name, name.c_str());
+                particion.Part_start = ValorInicial + 1; // Se suma 1 para el byte de ajuste
+                break;
+            }
+            else
+            {
+                // Si la particion no es la ultima, se suma el tamaño de la particion
+                ValorInicial += particion.Part_size + 1;
+            }
+        }
     }
     else if (type == "l")
     {
-        cout << "Logica" << endl;
         // Crear particion logica
         if (ContarTipoParticion(particiones, "e") == 0)
         {
             Scan.Errores("FDISK", "No existe una particion extendida en el disco, no es posible crear una particion logica");
             return;
         }
+
+        for (Structs::Particion particion : particiones)
+        {
+            if (particion.Part_type == 'e')
+            {
+                // Si la particion es la extendida, se crea la logica
+                vector<Structs::EBR> logicas = ObtenerParticionesLogicas(particion, path);
+                if (logicas.size() == 0)
+                {
+                    // Si no hay particiones logicas, se crea la primera
+                    Structs::EBR ebr;
+                    ebr.Part_status = '1';
+                    ebr.Part_fit = fit.substr(0, 1).c_str()[0];
+                    ebr.Part_size = size;
+                    strcpy(ebr.Part_name, name.c_str());
+                    ebr.Part_start = ValorInicial + 1; // Se suma 1 para el byte de ajuste
+                    ebr.Part_next = -1;
+                    particion.Part_size += sizeof(ebr);
+                    break;
+                }
+                else
+                {
+                    // Si hay particiones logicas, se suma el tamaño de la particion
+                    ValorInicial = logicas[logicas.size() - 1].Part_start + logicas[logicas.size() - 1].Part_size;
+                }
+            }
+            else
+            {
+                ValorInicial = particion.Part_start + particion.Part_size;
+            }
+        }
     }
+
+    mbr.Mbr_Particion1 = particiones[0];
+    mbr.Mbr_Particion2 = particiones[1];
+    mbr.Mbr_Particion3 = particiones[2];
+    mbr.Mbr_Particion4 = particiones[3];
+
+    // Escribir el MBR en el disco
+    FILE *archivo;
+    archivo = fopen(path.c_str(), "rb+");
+    if (archivo == NULL)
+    {
+        Scan.Errores("FDISK", "Error - No se pudo localizar el disco al momento de actulizar el MBR");
+        return;
+    }
+    rewind(archivo);
+    fwrite(&mbr, sizeof(mbr), 1, archivo);
+    fclose(archivo);
+
+    Scan.Aviso("FDISK - Particion creada correctamente");
+    Scan.Mensaje("========== PARTICION ==========");
+    Scan.Mensaje("Path: " + path);
+    Scan.Mensaje("Size: " + to_string(size) + " Bytes");
+    Scan.Mensaje("Unit: " + unit);
+    Scan.Mensaje("Type: " + type);
+    Scan.Mensaje("Fit: " + fit);
+    Scan.Mensaje("Name: " + name);
+    cout << endl;
 }
 
 void Disk::DeletePartition(string path, string name, string del)

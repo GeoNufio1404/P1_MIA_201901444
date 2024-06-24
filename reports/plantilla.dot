@@ -1,0 +1,87 @@
+digraph G {
+  fontname="Helvetica,Arial,sans-serif"
+  node [fontname="Helvetica,Arial,sans-serif"]
+  edge [fontname="Helvetica,Arial,sans-serif"]
+  a0 [shape=none label=<
+ <TABLE border="0" cellspacing="10" cellpadding="10" bgcolor="#293132" gradientangle="315">
+ 
+  <TR>
+      <TD colspan="2" bgcolor="#388697">Reporte de MBR</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#35717E">Mbr_tamano</TD>
+      <TD colspan="0" bgcolor="#315C65">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#35717E">Mbr_fecha_creacion</TD>
+      <TD colspan="0" bgcolor="#315C65">00/00/0000</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#35717E">Mbr_disk_signature</TD>
+      <TD colspan="0" bgcolor="#315C65">00</TD>
+  </TR>
+
+
+
+
+  <TR>
+      <TD colspan="2" bgcolor="#71B340">Particion</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#669D31">part_status</TD>
+      <TD colspan="0" bgcolor="#598B2C">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#669D31">part_type</TD>
+      <TD colspan="0" bgcolor="#598B2C">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#669D31">part_fit</TD>
+      <TD colspan="0" bgcolor="#598B2C">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#669D31">part_start</TD>
+      <TD colspan="0" bgcolor="#598B2C">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#669D31">part_size</TD>
+      <TD colspan="0" bgcolor="#598B2C">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#669D31">part_name</TD>
+      <TD colspan="0" bgcolor="#598B2C">00</TD>
+  </TR>
+
+
+
+    <TR>
+        <TD colspan="2" bgcolor="#453F78">Particion Logica</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#423767">part_status</TD>
+      <TD colspan="0" bgcolor="#3F2E56">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#423767">part_next</TD>
+      <TD colspan="0" bgcolor="#3F2E56">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#423767">part_fit</TD>
+      <TD colspan="0" bgcolor="#3F2E56">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#423767">part_start</TD>
+      <TD colspan="0" bgcolor="#3F2E56">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#423767">part_size</TD>
+      <TD colspan="0" bgcolor="#3F2E56">00</TD>
+  </TR>
+  <TR>
+      <TD colspan="0" bgcolor="#423767">part_name</TD>
+      <TD colspan="0" bgcolor="#3F2E56">00</TD>
+  </TR>
+  
+</TABLE>>];
+
+}

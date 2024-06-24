@@ -19,6 +19,13 @@ public:
         char Part_name[16];     // Nombre de la partición
     } Particion;
 
+    typedef struct _ParticionMount
+    {
+        char Path[20]; // Ruta del disco
+        char Name[20]; // Nombre de la partición
+        char Id[20];   // Identificador de la partición
+    } ParticionMount;
+
     typedef struct _MBR // Estructura de un MBR
     {
         int Mbr_tamano = 0;         // Tamaño del disco
