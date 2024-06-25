@@ -1,15 +1,21 @@
+const { insertData } = require("../config/db.mongo");
 
 const ciclo_for = async (req, res) => {
+
     const { numero } = req.params;
 
-    let respuesta = [];
+    let respuesta = '';
 
     for (let i = 0; i < numero; i++) {
-        respuesta.push(i);
+        if (i == numero) {
+            respuesta += i;
+        }
+        else {
+            respuesta += i + ', ';
+        }
     }
 
-    // Respuesta
-    res.status(200).json({ respuesta });
+    res.status(200).json({ msg: respuesta });
 };
 
 module.exports = {
