@@ -5,7 +5,7 @@ services:
   mongo:
     image: mongo
     restart: always
-    container_name: Contenedor_Mongo
+    container_name: mongodb
     ports:
       - 27017:27017
     environment:
