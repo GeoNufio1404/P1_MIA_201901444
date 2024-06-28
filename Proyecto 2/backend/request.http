@@ -1,0 +1,14 @@
+####
+GET http://localhost:3000/admin/ciclo_for/8
+
+####
+POST http://localhost:3000/admin/registro
+Content-Type: application/json
+
+{
+    "nombre": "Geovanni",
+    "apellido": "Nufio",
+    "usuario": "GeoNufio", 
+    "correo": "GeoNufio1404@gmail.com",
+    "password": "123456",
+}

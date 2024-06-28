@@ -1,0 +1,56 @@
+import './index.css';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+// Componentes
+import App from './App';
+import Bootstrap from './components/Bootstrap';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import AST from './components/AST';
+import TablaErrores from './components/TablaErrores';
+import TablaSimbolos from './components/TablaSimbolos';
+import TablaTokens from './components/TablaTokens';
+
+// Rutas
+const Router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "/AST",
+    element: <AST />,
+  },
+  {
+    path: "/TablaErrores",
+    element: <TablaErrores />,
+  },
+  {
+    path: "/TablaSimbolos",
+    element: <TablaSimbolos />,
+  },
+  {
+    path: "/TablaTokens",
+    element: <TablaTokens />,
+  },
+]);
+
+// Color Fondo Principal
+document.body.style = 'background: #2B353A;';
+
+
+//Render
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <Bootstrap />
+    <Navbar />
+    <br />
+    <div className="Fondo">
+      <RouterProvider router={Router} />
+    </div>
+    <br />
+    <Footer />
+  </React.StrictMode>
+);

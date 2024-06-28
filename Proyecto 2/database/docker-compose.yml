@@ -1,5 +1,7 @@
 version: "3.1"
+
 services:
+
   mongo:
     image: mongo
     restart: always
@@ -9,5 +11,3 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: Nufio
       MONGO_INITDB_ROOT_PASSWORD: 1404
-    volumes:
-      - ./db_data/:/data/db/
