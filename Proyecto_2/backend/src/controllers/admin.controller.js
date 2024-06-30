@@ -7,7 +7,7 @@ const ciclo_for = async (req, res) => {
 
     let respuesta = '';
 
-    for (let i = 0; i < numero; i++) {
+    for (let i = 0; i <= numero; i++) {
         if (i == numero) {
             respuesta += i;
         }

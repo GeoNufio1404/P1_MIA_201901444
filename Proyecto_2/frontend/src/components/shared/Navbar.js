@@ -1,39 +1,34 @@
-import "../index.css";
+import "../../index.css";
 
 // Items para administradores
 const Items_Admin = [
   {
-    text: "Tabla Usuarios",
-    key: "TablaUsuarios",
-    ref: "/TablaUsuarios",
+    text: "Administracion Usuarios",
+    key: "AdminUsuarios",
   }
 ];
 
 // Items para recepcionistas
 const Items_Recep = [
   {
-    text: "Solicitudes",
-    key: "Solicitudes",
-    ref: "/Solicitudes",
+    text: "Solicitudes Viajes",
+    key: "SolicitudesViajes",
+  },
+  {
+    text: "Solicitudes Autos",
+    key: "SolicitudesAutos",
   }
 ];
 
 // Items para usuarios normales
 const Items_Usuario = [
   {
-    text: "Tabla Tokens",
-    key: "TablaTokens",
-    ref: "/TablaTokens",
+    text: "Viajes",
+    key: "Viajes",
   },
   {
-    text: "Tabla Simbolos",
-    key: "TablaSimbolos",
-    ref: "/TablaSimbolos",
-  },
-  {
-    text: "AST",
-    key: "AST",
-    ref: "/AST",
+    text: "Renta de Autos",
+    key: "RentaAutos",
   }
 ];
 
@@ -45,7 +40,7 @@ function MostrarItems({ items, emptyItem }) {
     return items.map((item) => {
       return (
         <li key={item.key} className="nav-item">
-          <button className="btn Enfasis" onClick={() => window.open(item.ref, "_self")}> {item.text} </button>
+          <button className="btn Enfasis" onClick={() => window.open("/"+item.key, "_self")}> {item.text} </button>
         </li>
       );
     });

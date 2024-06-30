@@ -1,6 +1,6 @@
 import './index.css';
 import React, { useState, useRef } from 'react';
-import { Contenedor_Principal, Margen_Contenedor_Secundario } from './shared/Funciones';
+import { Contenedor_Principal, Contenedor_Secundario } from './components/shared/Funciones';
 
 function App() {
 
@@ -23,8 +23,8 @@ function App() {
 
     return (
       <form>
-        <h2 className="text-center">Login</h2>
-        <br />
+        <h1 className="text-center">Login</h1>
+        <br /><hr className="Principal" /><br />
         <div className="form-group">
           <label htmlFor="username">Username</label>
           <input
@@ -71,8 +71,8 @@ function App() {
 
     return (
       <form onSubmit={handleRegistro}>
-        <h2 className="text-center">Registro</h2>
-        <br />
+        <h1 className="text-center">Registro</h1>
+        <br /><hr className="Principal" /><br />
         <div className="form-group">
           <label htmlFor="nombreCompleto">Nombre Completo</label>
           <input
@@ -175,7 +175,7 @@ function App() {
                 ¿Necesitas ayuda para planificar tu viaje? Nuestro equipo de
                 expertos en viajes está aquí para ayudarte.
               </p>
-              <a href="#" className="btn boton-sm">
+              <a href="/" className="btn boton-sm">
                 Contactar con nosotros
               </a>
             </div>
@@ -192,10 +192,10 @@ function App() {
     if (NombreUsuario == null) {
       return (<div className="row text-center p-4 mx-auto example-row">
         <div className="w-25 p-2 col">
-          {Margen_Contenedor_Secundario(<Login />)}
+          {Contenedor_Secundario(<Login />, true)}
         </div>
         <div className="w-25 p-2 col">
-          {Margen_Contenedor_Secundario(<Registro />)}
+          {Contenedor_Secundario(<Registro />, true)}
         </div>
       </div>);
     }
@@ -203,7 +203,7 @@ function App() {
     return (
       <div className="row text-center p-4 mx-auto example-row">
         <div className="w-25 p-2 col">
-          {Margen_Contenedor_Secundario(<Bienvenida NombreUsuario={NombreUsuario} />)}
+          {Contenedor_Secundario(<Bienvenida NombreUsuario={NombreUsuario} />, true)}
         </div>
       </div>
     );
@@ -211,7 +211,7 @@ function App() {
 
   return (
     <div className="App example-row">
-      {Contenedor_Principal(<ContenidoPrincipal />)}
+      {Contenedor_Principal(<ContenidoPrincipal />, false)}
     </div>
   );
 }

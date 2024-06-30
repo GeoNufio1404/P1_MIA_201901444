@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const { Check } = require('express-validator')
+const { check } = require('express-validator')
 
 const validate = require("../middlewares/validateAtributes")
 const AdminController = require("../controllers/admin.controller")
@@ -25,6 +25,6 @@ router.post('/registro',
         validate
     ],
     AdminController.registro
-)
+);
 
 module.exports = router;

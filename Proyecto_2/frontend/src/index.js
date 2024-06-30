@@ -6,16 +6,16 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 // Componentes
 import App from './App';
 
-import Bootstrap from './shared/Bootstrap';
-import Navbar from './shared/Navbar';
-import Footer from './shared/Footer';
+import Bootstrap from './components/shared/Bootstrap';
+import Navbar from './components/shared/Navbar';
+import Footer from './components/shared/Footer';
 
 
-import TablaUsuarios from './components/admins/TablaUsuarios';
-
-import AST from './components/AST';
-import TablaSimbolos from './components/TablaSimbolos';
-import TablaTokens from './components/TablaTokens';
+import AdminUsuarios from './components/admins/AdminUsuarios';
+import SolicitudesAutos from './components/recepcionistas/SolicitudesAutos';
+import SolicitudesViajes from './components/recepcionistas/SolicitudesViajes';
+import Viajes from './components/usuarios/Viajes';
+import RentaAutos from './components/usuarios/RentaAutos';
 
 // Rutas
 const Router = createBrowserRouter([
@@ -23,22 +23,29 @@ const Router = createBrowserRouter([
     path: "/",
     element: <App />,
   },
+  // Rutas para Administradores
   {
-    path: "/AST",
-    element: <AST />,
+    path: "/AdminUsuarios",
+    element: <AdminUsuarios />,
+  },
+  // Rutas para Recepcionistas
+  {
+    path: "/SolicitudesAutos",
+    element: <SolicitudesAutos />,
   },
   {
-    path: "/TablaUsuarios",
-    element: <TablaUsuarios />,
+    path: "/SolicitudesViajes",
+    element: <SolicitudesViajes />,
+  },
+  // Rutas para Usuarios
+  {
+    path: "/Viajes",
+    element: <Viajes />,
   },
   {
-    path: "/TablaSimbolos",
-    element: <TablaSimbolos />,
-  },
-  {
-    path: "/TablaTokens",
-    element: <TablaTokens />,
-  },
+    path: "/RentaAutos",
+    element: <RentaAutos />,
+  }
 ]);
 
 // Color Fondo Principal
@@ -50,11 +57,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Bootstrap />
     <Navbar />
-    <br />
+    <br /><br />
     <div className="Fondo">
       <RouterProvider router={Router} />
     </div>
-    <br />
+    <br /><br /><br />
     <Footer />
   </React.StrictMode>
 );

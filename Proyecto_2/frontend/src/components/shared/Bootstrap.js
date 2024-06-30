@@ -1,5 +1,5 @@
 // Objetivo: Página de prueba para verificar que el servidor está funcionando correctamente
-import "../index.css";
+import "../../index.css";
 
 function Bootstrap() {
     return (
