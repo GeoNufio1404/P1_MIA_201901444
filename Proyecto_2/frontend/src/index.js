@@ -5,11 +5,15 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 // Componentes
 import App from './App';
-import Bootstrap from './components/Bootstrap';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+
+import Bootstrap from './shared/Bootstrap';
+import Navbar from './shared/Navbar';
+import Footer from './shared/Footer';
+
+
+import TablaUsuarios from './components/admins/TablaUsuarios';
+
 import AST from './components/AST';
-import TablaErrores from './components/TablaErrores';
 import TablaSimbolos from './components/TablaSimbolos';
 import TablaTokens from './components/TablaTokens';
 
@@ -24,8 +28,8 @@ const Router = createBrowserRouter([
     element: <AST />,
   },
   {
-    path: "/TablaErrores",
-    element: <TablaErrores />,
+    path: "/TablaUsuarios",
+    element: <TablaUsuarios />,
   },
   {
     path: "/TablaSimbolos",

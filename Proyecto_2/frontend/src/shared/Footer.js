@@ -9,7 +9,7 @@ function Footer() {
                     <div className="row">
                         <div className="col-6">
                             <h5>Proyecto:</h5>
-                            <p>OLC2, OLCScript</p>
+                            <p>AviCar, Manejo e Implementacion de Archivos</p>
                         </div>
                         <div className="col-6">
                             <h5>Datos Estudiante:</h5>

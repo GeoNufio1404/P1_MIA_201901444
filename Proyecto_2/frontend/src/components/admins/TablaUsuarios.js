@@ -1,4 +1,4 @@
-import '../index.css';
+import '../../index.css';
 import React, { useEffect, useState } from 'react';
 
 function TablaErrores() {
