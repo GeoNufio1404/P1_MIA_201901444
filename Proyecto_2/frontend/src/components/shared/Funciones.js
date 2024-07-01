@@ -39,4 +39,12 @@ const Contenedor_Secundario = (CodigoHtml, sombra) => {
     );
 };
 
-export { Contenedor_Principal, Contenedor_Secundario };
+const Separacion = () => {
+    return (
+        <div>
+            <br /><hr className="Principal" /><br />
+        </div>
+    );
+};
+
+export { Contenedor_Principal, Contenedor_Secundario, Separacion };

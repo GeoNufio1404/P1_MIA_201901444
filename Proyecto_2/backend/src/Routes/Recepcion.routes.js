@@ -6,4 +6,6 @@ router.get("/", (req, res) => {
     res.status(200).json({ message: "Estoy en Recepcion" })
 });
 
+
+
 module.exports = router;

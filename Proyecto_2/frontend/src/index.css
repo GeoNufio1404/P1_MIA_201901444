@@ -4,6 +4,8 @@ Colores:
 	Enfasis: 		#A81616
 	Principal: 		#37474F
 	Secundario:		#323F46
+
+	Boton_Editar; #40476D
 */
 
 * {
@@ -12,6 +14,15 @@ Colores:
 	font-size: 16px;
 	font-family: arial;
 	color: #fff;
+}
+
+.Boton_Editar {
+	background-color: #40476D;
+	color: #fff;
+	margin-left: 15px;
+	margin-bottom: 5px;
+	border: 1px solid #40476D;
+
 }
 
 .Enfasis {

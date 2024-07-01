@@ -1,21 +1,16 @@
 const { Router } = require("express")
+const { check } = require('express-validator')
+
+const validate = require("../middlewares/validateAtributes")
+const UsuarioController = require("../controllers/usuario.controller")
 
 const router = Router()
-
-// GET /users - Obtener lista de usuarios
-router.get("/", (req, res) => {
-    const users = []
-    res.status(200).json(users)
-
-});
 
 
 // POST /users - Crear un nuevo usuario
 router.post("/", (req, res) => {
-    const { name, email } = req.body
-    const newUser = { name, email }
-    res.status(201).json(newUser)
 
+    
 });
 
 

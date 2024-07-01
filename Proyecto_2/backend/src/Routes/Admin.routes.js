@@ -15,16 +15,19 @@ router.get("/", (req, res) => {
 
 router.get("/ciclo_for/:numero", AdminController.ciclo_for);
 
-router.post('/registro',
+router.post('/Usuarios',
     [
-        check('nombre', 'El nombre es obligatorio').notEmpty(),
-        check('apellido', 'El apellido es obligatorio').notEmpty(),
-        check('usuario', 'El usuario es obligatorio').notEmpty(),
-        check('correo', 'El correo es obligatorio').isEmail(),
-        check('password', 'El password es obligatorio').notEmpty(),
+        check('Nombre', 'El nombre es obligatorio').notEmpty(),
+        check('Apellido', 'El apellido es obligatorio').notEmpty(),
+        check('Usuario', 'El usuario es obligatorio').notEmpty(),
+        check('Correo', 'El correo es obligatorio').isEmail(),
+        check('Password', 'El password es obligatorio').notEmpty(),
+        check('TipoUsuario', 'El tipo de usuario es obligatorio').notEmpty(),
         validate
     ],
-    AdminController.registro
+    AdminController.NuevoUsuario
 );
+
+router.get('/Usuarios', AdminController.ListarUsuarios);
 
 module.exports = router;
