@@ -9,7 +9,7 @@ services:
     env_file:
       - ./backend/.env
     ports:
-      - ${MONGODB_PORT}:27017
+      - "${MONGODB_PORT}:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
@@ -21,7 +21,7 @@ services:
     env_file:
       - ./.env
     ports:
-      - ${PORT}:${PORT}
+      - "${PORT}:${PORT}"
     environment:
       NODE_ENV: development
       MONGODB_HOST: mongo
@@ -33,6 +33,6 @@ services:
     container_name: Contenedor_Frontend
     restart: always
     ports:
-      - 3000:3000
+      - "3000:3000"
     depends_on:
       - api
