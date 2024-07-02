@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs'); // npm i bcryptjs || bcrypt sirve para encri
 
 const NuevoUsuario = async (req, res) => {
     // Recibir los datos enviados desde el cliente
-    const { Nombre, Apellido, Usuario, Correo, Password, Imagen } = req.body;
+    const { Nombre, Usuario, Correo, Password } = req.body;
     const TipoUsuario = 'User';
 
     // Encriptar contraseña
@@ -11,16 +11,26 @@ const NuevoUsuario = async (req, res) => {
     const HashedPassword = await bcrypt.hash(Password, salt); // Encriptar la contraseña
 
     // Insertar datos a la base de datos
-    console.log('Datos recibidos', Nombre, Apellido, Usuario, Correo, HashedPassword, TipoUsuario, Imagen);
+    console.log('Datos recibidos', Nombre, Usuario, Correo, HashedPassword, TipoUsuario);
+
+    // Buscar usuario en la base de datos
+    const user = await getCollection('Usuarios', { Usuario });
+
+    // Verificar si el usuario ya existe en la base de datos
+    if (user.length > 0) {
+        return res.status(400).json(
+            {
+                status: false,
+                msg: 'Usuario ya existe',
+            });
+    };
 
     const result = await insertData('Usuarios', {
         Nombre,
-        Apellido,
         Usuario,
         Correo,
         Password: HashedPassword,
-        TipoUsuario,
-        Imagen
+        TipoUsuario
     });
 
 
@@ -42,7 +52,7 @@ const NuevoUsuario = async (req, res) => {
         });
 };
 
-const Perfil = async (req, res) => {
+const ObtenerUsuario = async (req, res) => {
     const { Usuario } = req.params;
 
     const user = await getCollection('Usuarios', { Usuario });
@@ -56,7 +66,12 @@ const Perfil = async (req, res) => {
             });
     }
 
-
+    return res.status(200).json(
+        {
+            status: true,
+            msg: 'Usuario encontrado',
+            data: user
+        });
 };
 
 const Login = async (req, res) => {
@@ -71,7 +86,7 @@ const Login = async (req, res) => {
         return res.status(404).json(
             {
                 status: false,
-                msg: 'Usuario no encontrado',
+                msg: 'Credenciales incorrectas',
                 data: user
             });
     };
@@ -84,7 +99,7 @@ const Login = async (req, res) => {
             {
                 status: false,
                 msg: 'Credenciales incorrectas',
-                data: user
+                data: ''
             });
     };
 
@@ -98,7 +113,48 @@ const Login = async (req, res) => {
         });
 };
 
+const ActualizarUsuario = async (req, res) => {
+    // Recibir los datos enviados desde el cliente
+    const { Nombre, Usuario, Correo, Password } = req.body;
+    const TipoUsuario = 'User';
+
+    // Encriptar contraseña
+    const salt = await bcrypt.genSaltSync(10); // Generar un salt || un salt es una cadena aleatoria que se añade a la contraseña antes de encriptarla
+    const HashedPassword = await bcrypt.hash(Password, salt); // Encriptar la contraseña
+
+    // Actualizar datos a la base de datos
+    console.log('Datos recibidos', Nombre, Usuario, Correo, HashedPassword, TipoUsuario);
+
+    // Actualizar datos a la base de datos
+    const result = await updateData('Usuarios', { Usuario }, {
+        Nombre,
+        Usuario,
+        Correo,
+        Password: HashedPassword,
+        TipoUsuario
+    });
+
+    if (result instanceof Error) {
+        return res.status(500).json(
+            {
+                status: false,
+                msg: 'Error al actualizar usuario',
+                data: result
+            });
+    };
+
+    // Respuesta
+    return res.status(200).json(
+        {
+            status: true,
+            msg: 'Actualización exitosa',
+            data: result
+        });
+};
+
 module.exports = {
     NuevoUsuario,
+    ObtenerUsuario,
+    ActualizarUsuario,
     Login
 };

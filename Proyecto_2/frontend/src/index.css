@@ -2,6 +2,7 @@
 Colores:
 	Fondo: 			#2B353A
 	Enfasis: 		#A81616
+	Enfasis2:		#951D1F
 	Principal: 		#37474F
 	Secundario:		#323F46
 
@@ -30,6 +31,11 @@ Colores:
 	background-color: #A81616;
 }
 
+.Enfasis2 {
+	background: #951D1F;
+	background-color: #951D1F;
+}
+
 .Principal {
 	background: #37474F;
 }
@@ -56,7 +62,6 @@ hr {
 }
 
 .boton {
-	background-color: #A81616;
 	color: #fff;
 	margin-left: 15px;
 	margin-bottom: 5px;
@@ -89,7 +94,7 @@ footer {
 }
 
 .container-fixed {
-	width: 80%;
+	width: 90%;
 }
 
 /* Style the tab */

@@ -1,44 +1,62 @@
 import "../../index.css"
-import { Contenedor_Principal, Contenedor_Secundario, Separacion } from '../shared/Funciones';
+import { Contenedor_Principal, Contenedor_Secundario, Separacion, Division4_8 } from '../shared/Funciones';
 
 function AdminUsuarios() {
-  const FormularioUsuarios = () =>  {
+  const FormularioUsuarios = () => {
     return (
       <form>
-            <h2>Agregar nuevo usuario</h2>
-            <Separacion />
-            <div className="form-group">
-              <label>Nombre</label>
-              <input type="text" className="form-control" />
+        <h2 className="text-center">Agregar Usuario</h2>
+        <Separacion />
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6">
+              <div className="form-group">
+                <label>Nombre Completo</label>
+                <input type="text" className="form-control" placeholder="Ingrese su nombre completo" />
+              </div>
             </div>
-            <div className="form-group">
-              <label>Correo</label>
-              <input type="email" className="form-control" />
+            <div className="col-md-6">
+              <div className="form-group">
+                <label>Correo</label>
+                <input type="email" className="form-control" placeholder="Ingrese su correo electrónico" />
+              </div>
             </div>
-            <div className="form-group">
-              <label>Contraseña</label>
-              <input type="password" className="form-control" />
+          </div>
+          <div className="row">
+            <div className="col-md-6">
+              <div className="form-group">
+                <label>Contraseña</label>
+                <input type="password" className="form-control" placeholder="Ingrese su contraseña" />
+              </div>
             </div>
-            <div className="form-group">
-              <label>Tipo de usuario</label>
-              <select className="form-control">
-                <option value="User">User</option>
-                <option value="Admin">Admin</option>
-                <option value="Recep">Recep</option>
-              </select>
+            <div className="col-md-6">
+              <div className="form-group">
+                <label>Confirmar Contraseña</label>
+                <input type="password" className="form-control" placeholder="Confirme su contraseña" />
+              </div>
             </div>
-            <br />
-            <button type="submit" className="btn boton">
-              Agregar usuario
-            </button>
-          </form>
+          </div>
+          <div className="form-group">
+            <label>Tipo de usuario</label>
+            <select className="form-control">
+              <option value="User">User</option>
+              <option value="Admin">Admin</option>
+              <option value="Recep">Recep</option>
+            </select>
+          </div>
+          <br />
+          <button type="submit" className="btn btn-block Enfasis2">
+            Agregar usuario
+          </button>
+        </div>
+      </form>
     );
   };
 
   const TablaUsuarios = () => {
     return (
       <table className="table table-striped sombra">
-        <thead className="Enfasis">
+        <thead className="Enfasis2">
           <tr>
             <th>Nombre</th>
             <th>Correo</th>
@@ -53,8 +71,8 @@ function AdminUsuarios() {
             <td>correo1@example.com</td>
             <td>User</td>
             <td>
-              <button className="btn Boton_Editar">Editar</button>
-              <button className="btn boton">Eliminar</button>
+              <button className="btn boton Boton_Editar">Editar</button>
+              <button className="btn boton Enfasis2">Eliminar</button>
             </td>
           </tr>
           <tr>
@@ -63,15 +81,16 @@ function AdminUsuarios() {
             <td>User</td>
             <td>
               <button className="btn Boton_Editar">Editar</button>
-              <button className="btn boton">Eliminar</button>
+              <button className="btn boton Enfasis2">Eliminar</button>
             </td>
-          </tr><tr>
+          </tr>
+          <tr>
             <td>Nombre 1</td>
             <td>correo1@example.com</td>
             <td>User</td>
             <td>
               <button className="btn Boton_Editar">Editar</button>
-              <button className="btn boton">Eliminar</button>
+              <button className="btn boton Enfasis2">Eliminar</button>
             </td>
           </tr>
           {/*... */}
@@ -80,32 +99,9 @@ function AdminUsuarios() {
     );
   };
 
-  const Division1_3 = (ComponeneteIzq, ComponeneteDer) => {
-    return (
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-4">
-            {ComponeneteIzq}
-          </div>
-          <div className="col-8">
-            {ComponeneteDer}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="AdminUsuarios">
-      <div className="container Principal sombra w-50 p-1">
-        <div className="col text-center mx-auto">
-          <br />
-          <h1 id="Titulo">Administracion - Usuarios</h1>
-          <br />
-        </div>
-      </div>
-      <br />
-      {Contenedor_Principal(Division1_3(Contenedor_Secundario(<FormularioUsuarios />, true), <TablaUsuarios />))}
+      {Contenedor_Principal("Administracion - Usuarios", Division4_8(Contenedor_Secundario(<FormularioUsuarios />, true), <TablaUsuarios />))}
     </div>
   );
 }

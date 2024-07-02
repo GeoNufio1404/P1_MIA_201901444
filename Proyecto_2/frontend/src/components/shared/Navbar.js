@@ -40,7 +40,7 @@ function MostrarItems({ items, emptyItem }) {
     return items.map((item) => {
       return (
         <li key={item.key} className="nav-item">
-          <button className="btn Enfasis" onClick={() => window.open("/"+item.key, "_self")}> {item.text} </button>
+          <button className="btn Enfasis" onClick={() => window.open("/"+item.key, "_self")}> ╭╮{item.text}╭╮ </button>
         </li>
       );
     });
@@ -68,7 +68,7 @@ function Navbar() {
         <nav className="navbar navbar-expand-lg navbar-dark Enfasis">
           <div className="container p-2">
 
-            <button className="navbar-brand btn Enfasis" onClick={() => window.open('/', '_self')}> AviCar </button>
+            <button className="navbar-brand btn Enfasis" onClick={() => window.open('/', '_self')}>╭━╮ AviCar ╭━╮</button>
 
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
               <ul className="navbar-nav mr-auto">

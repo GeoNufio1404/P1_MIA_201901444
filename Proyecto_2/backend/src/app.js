@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json({ limit: '50mb' }));
 
 app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Hello World!!' });
+    res.status(200).json({ message: 'Bienvenido!!' });
 });
 
 // Rutas

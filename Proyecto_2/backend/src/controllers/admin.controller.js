@@ -21,18 +21,29 @@ const ciclo_for = async (req, res) => {
 
 const NuevoUsuario = async (req, res) => {
     // Recibir los datos enviados desde el cliente
-    const { Nombre, Apellido, Usuario, Correo, Password, TipoUsuario } = req.body;
+    const { Nombre, Usuario, Correo, Password, TipoUsuario } = req.body;
 
     // Encriptar contraseña
     const salt = await bcrypt.genSaltSync(10); // Generar un salt || un salt es una cadena aleatoria que se añade a la contraseña antes de encriptarla
     const HashedPassword = await bcrypt.hash(Password, salt); // Encriptar la contraseña
 
     // Insertar datos a la base de datos
-    console.log('Datos recibidos', Nombre, Apellido, Usuario, Correo, HashedPassword, TipoUsuario);
+    console.log('Datos recibidos', Nombre, Usuario, Correo, HashedPassword, TipoUsuario);
+
+    // Buscar usuario en la base de datos
+    const user = await getCollection('Usuarios', { Usuario });
+
+    // Verificar si el usuario ya existe en la base de datos
+    if (user.length > 0) {
+        return res.status(400).json(
+            {
+                status: false,
+                msg: 'Usuario ya existe',
+            });
+    };
 
     const result = await insertData('Usuarios', {
         Nombre,
-        Apellido,
         Usuario,
         Correo,
         Password: HashedPassword,

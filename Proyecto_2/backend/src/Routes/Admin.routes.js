@@ -18,7 +18,6 @@ router.get("/ciclo_for/:numero", AdminController.ciclo_for);
 router.post('/Usuarios',
     [
         check('Nombre', 'El nombre es obligatorio').notEmpty(),
-        check('Apellido', 'El apellido es obligatorio').notEmpty(),
         check('Usuario', 'El usuario es obligatorio').notEmpty(),
         check('Correo', 'El correo es obligatorio').isEmail(),
         check('Password', 'El password es obligatorio').notEmpty(),
