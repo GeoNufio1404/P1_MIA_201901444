@@ -1,0 +1,23 @@
+
+
+# Utiliza una versión ligera de Node como imagen base
+FROM node:20-alpine AS build
+
+# Establece el directorio de trabajo en /client
+WORKDIR /client
+
+# Copia el archivo package.json al contenedor en la ruta /client
+COPY package*.json /client/
+
+# Instala las dependencias
+RUN npm install
+
+# Copia el resto de los archivos de la aplicación
+COPY . /client/
+
+# Expone el puerto 3000 (ajústalo según tu configuración)
+EXPOSE 3000
+
+# Comando para iniciar la aplicación React
+
+CMD ["npm", "start"]

@@ -1,12 +1,12 @@
 import "../../index.css"
-import { Contenedor_Principal, Contenedor_Secundario } from '../shared/Funciones';
+import { Contenedor_Principal, Contenedor_Secundario, Separacion } from '../shared/Funciones';
 
 function AdminUsuarios() {
   const FormularioUsuarios = () =>  {
     return (
       <form>
             <h2>Agregar nuevo usuario</h2>
-            {}
+            <Separacion />
             <div className="form-group">
               <label>Nombre</label>
               <input type="text" className="form-control" />

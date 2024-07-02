@@ -3,26 +3,36 @@ version: '3.1'
 services:
 
   mongo:
-    image: mongo:latest
+    image: mongo
     container_name: Contenedor_Mongo
+    restart: always
+    env_file:
+      - ./backend/.env
     ports:
-      - 27017:27017
+      - ${MONGODB_PORT}:27017
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: MIA2024
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
 
   api:
     build: ./backend
-    container_name: mia-api
+    container_name: Contenedor_API
     restart: always
+    env_file:
+      - ./.env
     ports:
-      - 3000:3000
+      - ${PORT}:${PORT}
+    environment:
+      NODE_ENV: development
+      MONGODB_HOST: mongo
+    depends_on:
+      - mongo
 
   frontend:
     build: ./frontend
-    container_name: mia-frontend
+    container_name: Contenedor_Frontend
     restart: always
     ports:
-      - 80:80
+      - 3000:3000
     depends_on:
       - api

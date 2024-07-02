@@ -211,7 +211,7 @@ function App() {
 
   return (
     <div className="App example-row">
-      {Contenedor_Principal(<ContenidoPrincipal />, false)}
+      {Contenedor_Principal(<ContenidoPrincipal />, true)}
     </div>
   );
 }

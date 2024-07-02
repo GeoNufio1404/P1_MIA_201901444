@@ -57,11 +57,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Bootstrap />
     <Navbar />
-    <br /><br />
+    <br />
     <div className="Fondo">
       <RouterProvider router={Router} />
     </div>
-    <br /><br /><br />
+    <br /><br />
     <Footer />
   </React.StrictMode>
 );
