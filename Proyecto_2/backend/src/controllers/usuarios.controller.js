@@ -13,8 +13,8 @@ const NuevoUsuario = async (req, res) => {
     // Insertar datos a la base de datos
     console.log('Datos recibidos', Nombre, Usuario, Correo, HashedPassword, TipoUsuario);
 
-    // Buscar usuario en la base de datos
-    const user = await getCollection('Usuarios', { Usuario });
+    // Obtener usuario de la base de datos para verificar si ya existe
+    const user = await getCollection('Usuarios', { Usuario: Usuario });
 
     // Verificar si el usuario ya existe en la base de datos
     if (user.length > 0) {
@@ -53,9 +53,8 @@ const NuevoUsuario = async (req, res) => {
 };
 
 const ObtenerUsuario = async (req, res) => {
-    const { Usuario } = req.params;
 
-    const user = await getCollection('Usuarios', { Usuario });
+    const user = await getCollection('Usuarios', { Usuario: req.params.Usuario });
 
     if (user.length == 0) {
         return res.status(404).json(
@@ -87,14 +86,15 @@ const Login = async (req, res) => {
             {
                 status: false,
                 msg: 'Credenciales incorrectas',
-                data: user
+                data: ''
             });
     };
 
-    // Verificar contraseña
+    // Verificar contraseña y usuario
     const validPassword = await bcrypt.compare(Password, user[0].Password);
+    const validUser = user[0].Usuario === Usuario;
 
-    if (!validPassword) {
+    if (!validPassword || !validUser) {
         return res.status(401).json(
             {
                 status: false,
@@ -108,8 +108,7 @@ const Login = async (req, res) => {
         {
             status: true,
             msg: 'Login exitoso',
-            data: user.Usuario,
-            tipo_usuario: user.TipoUsuario,
+            data: user[0].TipoUsuario
         });
 };
 

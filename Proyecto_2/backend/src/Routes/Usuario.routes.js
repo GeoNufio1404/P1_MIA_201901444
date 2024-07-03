@@ -8,11 +8,11 @@ const router = Router()
 
 // GET / - Mostrar mensaje de bienvenida
 router.get("/", (req, res) => {
-    res.status(200).json({ message: 'Es' });
+    res.status(200).json({ message: 'Estoy en Usuarios!' });
 });
 
 // POST /users - Crear un nuevo usuario
-router.post("/", [
+router.post("/registro", [
     check('Nombre', 'El nombre es obligatorio').notEmpty(),
     check('Usuario', 'El usuario es obligatorio').notEmpty(),
     check('Correo', 'El email es obligatorio').isEmail(),

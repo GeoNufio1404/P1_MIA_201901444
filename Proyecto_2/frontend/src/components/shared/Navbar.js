@@ -40,7 +40,7 @@ function MostrarItems({ items, emptyItem }) {
     return items.map((item) => {
       return (
         <li key={item.key} className="nav-item">
-          <button className="btn Enfasis" onClick={() => window.open("/"+item.key, "_self")}> ╭╮{item.text}╭╮ </button>
+          <button className="btn Enfasis" onClick={() => window.open("/" + item.key, "_self")}> ╭╮{item.text}╭╮ </button>
         </li>
       );
     });
@@ -61,6 +61,23 @@ function ComprobarTipoUsuario() {
   }
 };
 
+// Boton para cerrar sesion
+const BotonCerrarSesion = () => {
+
+  function handleCerrarSesion() {
+    sessionStorage.removeItem("user_name");
+    sessionStorage.removeItem("user_type");
+    window.open('/', '_self')
+  };
+
+  if (sessionStorage.getItem("user_name") === null) {
+    return (<div></div>);
+  }
+  return (
+    <button className="navbar-brand btn Enfasis" onClick={handleCerrarSesion}>╭╮Cerrar Sesion╭╮</button>
+  );
+};
+
 function Navbar() {
   return (
     <div className="Navbar">
@@ -75,6 +92,8 @@ function Navbar() {
                 <MostrarItems items={ComprobarTipoUsuario()} emptyItem="" />
               </ul>
             </div>
+
+            <BotonCerrarSesion />
           </div>
         </nav>
       </header>

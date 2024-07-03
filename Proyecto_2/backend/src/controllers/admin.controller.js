@@ -31,7 +31,7 @@ const NuevoUsuario = async (req, res) => {
     console.log('Datos recibidos', Nombre, Usuario, Correo, HashedPassword, TipoUsuario);
 
     // Buscar usuario en la base de datos
-    const user = await getCollection('Usuarios', { Usuario });
+    const user = await getCollection('Usuarios', { Usuario: Usuario});
 
     // Verificar si el usuario ya existe en la base de datos
     if (user.length > 0) {

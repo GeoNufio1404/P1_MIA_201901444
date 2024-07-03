@@ -14,7 +14,9 @@ app.use(morgan('dev'));
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, 
+    headers: ['Access-Control-Allow-Origin', '*', 'Access-Control-Allow-Headers', 'Content-Type, Authorization']
 }));
 
 // Configuracion de Body Parser

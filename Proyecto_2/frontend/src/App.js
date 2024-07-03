@@ -1,24 +1,48 @@
 import './index.css';
 import React, { useState, useRef } from 'react';
-import { Contenedor_Principal, Contenedor_Secundario, Separacion, Division4_8 } from './components/shared/Funciones';
+import { Contenedor_Principal, Contenedor_Secundario, Separacion, Division4_8, Contenedor_Titulo } from './components/shared/Funciones';
+import { API } from "./Globales";
 
 function App() {
 
   // Html del login
   const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [Usuario, setUsername] = useState('');
+    const [Password, setPassword] = useState('');
 
     const usernameRef = useRef(null);
     const passwordRef = useRef(null);
 
     function handleLogin(event) {
       event.preventDefault();
-      // Add login logic here
-      sessionStorage.setItem('user_name', username);
-      sessionStorage.setItem('user_type', 'User');
-      window.location.reload();
-      console.log('Login button clicked!');
+
+      // Hacer la peticion al backend para verificar si el usuario existe
+      fetch(`${API}/usuario/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ Usuario, Password })
+      })
+        .then(response => response.json())
+        .then(res => {
+          // Handle the response from the backend
+          console.log(res);
+
+          if (res.status === false) {
+            alert('Usuario o contraseña incorrectos');
+            return;
+          }
+
+          // Add login logic here
+          sessionStorage.setItem('user_name', Usuario);
+          sessionStorage.setItem('user_type', res.data);
+
+          // Alerta de que el usuario ha iniciado sesión
+          alert('Usuario ha iniciado sesión correctamente');
+
+          window.location.reload();
+        });
     }
 
     return (
@@ -31,7 +55,7 @@ function App() {
             type="text"
             id="username"
             className="form-control mx-auto text-center w-50"
-            value={username}
+            value={Usuario}
             onChange={(event) => setUsername(event.target.value)}
             ref={usernameRef}
           />
@@ -42,7 +66,7 @@ function App() {
             type="password"
             id="password"
             className="form-control mx-auto text-center w-50"
-            value={password}
+            value={Password}
             onChange={(event) => setPassword(event.target.value)}
             ref={passwordRef}
           />
@@ -57,17 +81,54 @@ function App() {
 
   const Registro = () => {
 
-    const [nombreCompleto, setNombreCompleto] = useState('');
-    const [username, setUsername] = useState('');
+    const [Nombre, setNombreCompleto] = useState('');
+    const [Username, setUsername] = useState('');
     const [fotoPerfil, setFotoPerfil] = useState('https://via.placeholder.com/150');
-    const [correoElectronico, setCorreoElectronico] = useState('');
-    const [contrasena, setContrasena] = useState('');
+    const [Correo, setCorreoElectronico] = useState('');
+    const [Password, setContrasena] = useState('');
     const [confirmarContrasena, setConfirmarContrasena] = useState('');
+
+    const passwordRef = useRef(null);
+    const confirmarPasswordRef = useRef(null);
+    const correoRef = useRef(null);
+    const usernameRef = useRef(null);
+    const nombreRef = useRef(null);
 
     const handleRegistro = (event) => {
       event.preventDefault();
 
-      // Aquí puedes agregar la lógica para enviar los datos del formulario a tu backend
+      if (Password !== confirmarContrasena) {
+        alert('Las contraseñas no coinciden');
+        return;
+      }
+
+      let Datos = {
+        "Nombre": Nombre,
+        "Usuario": Username,
+        "Correo": Correo,
+        "Password": Password
+      };
+
+      console.log(JSON.stringify(Datos));
+
+      fetch(`${API}/usuario/registro`, {
+        method: 'POST',
+        body: JSON.stringify(Datos),
+      })
+        .then(response => response.json())
+        .then(res => {
+          // Handle the response from the backend
+          console.log(res);
+
+          if (res.status === false) {
+            alert('Error al registrar usuario');
+            return;
+          } else {
+            alert('Usuario registrado correctamente');
+            window.location.reload();
+          }
+        }
+        );
       console.log('Registro exitoso!');
     };
 
@@ -82,35 +143,64 @@ function App() {
             <div className="col-md-6">
               <div className="form-group">
                 <label>Nombre Completo</label>
-                <input type="text" className="form-control" placeholder="Ingrese su nombre completo" />
+                <input type="text"
+                  className="form-control"
+                  value={Nombre}
+                  onChange={(event) => setNombreCompleto(event.target.value)}
+                  ref={nombreRef}
+                  placeholder="Ingrese su nombre completo" />
               </div>
             </div>
 
             <div className="col-md-6">
               <div className="form-group">
                 <label>Username</label>
-                <input type="text" className="form-control" placeholder="Ingrese su nombre de Usuario" />
+                <input type="text"
+                  className="form-control"
+                  value={Username}
+                  onChange={(event) => setUsername(event.target.value)}
+                  ref={usernameRef}
+                  placeholder="Ingrese su nombre de Usuario"
+                />
               </div>
             </div>
 
             <div className="col-md-6">
               <div className="form-group">
                 <label>Contraseña</label>
-                <input type="password" className="form-control" placeholder="Ingrese su contraseña" />
+                <input type="password"
+                  className="form-control"
+                  value={Password}
+                  onChange={(event) => setContrasena(event.target.value)}
+                  ref={passwordRef}
+                  placeholder="Ingrese su contraseña"
+                />
               </div>
             </div>
 
             <div className="col-md-6">
               <div className="form-group">
                 <label>Correo</label>
-                <input type="email" className="form-control" placeholder="Ingrese su correo electrónico" />
+                <input type="email"
+                  className="form-control"
+                  value={Correo}
+                  onChange={(event) => setCorreoElectronico(event.target.value)}
+                  ref={correoRef}
+                  placeholder="Ingrese su correo electrónico"
+                />
               </div>
             </div>
 
             <div className="col-md-6">
               <div className="form-group">
                 <label>Confirmar Contraseña</label>
-                <input type="password" className="form-control" placeholder="Confirme su contraseña" />
+                <input type="password"
+                  className="form-control"
+                  value={confirmarContrasena}
+                  onChange={(event) => setConfirmarContrasena(event.target.value)}
+                  ref={confirmarPasswordRef}
+                  placeholder="Confirme su contraseña"
+                />
               </div>
             </div>
           </div>
@@ -151,7 +241,7 @@ function App() {
           </div>
           <div className="col-md-6">
             <div className="welcome-content">
-            <h2 className="text-center">Bienvenido {NombreUsuario}!</h2>
+              {Contenedor_Titulo('Bienvenido a AviCar ' + NombreUsuario)}
               <Separacion />
               <h2>¡Descubre nuevos destinos!</h2>
               <br />
